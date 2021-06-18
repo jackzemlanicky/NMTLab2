@@ -44,13 +44,16 @@ class PDFDataset(Dataset):
         if self.plot_type == 'byte_plot':
             # Convert all pdfs to images and save their paths in a list
             for file_name in os.listdir(benign_files):
-                # convert returns the path of the newly created image in a string after converting it, which (should) be added as a value in the dictionary
-                path_list_benign.append(bp.convert(benign_files,file_name,256))
+                if file_name.endswith('pdf'):
+                    # convert returns the path of the newly created image in a string after converting it, which (should) be added as a value in the dictionary
+                    path_list_benign.append(bp.convert(benign_files,file_name,256))
             # add this list to the dictionary as benign's value
+            print(path_list_benign.__len__())
             data_by_type['benign'] = path_list_benign
             # Do the same for the malicious files
             for file_name in os.listdir(malicious_files):
-                path_list_malicious.append(bp.convert(benign_files,file_name,256))
+                if file_name.endswith('pdf'):
+                    path_list_malicious.append(bp.convert(benign_files,file_name,256))
             data_by_type['malicious'] = path_list_malicious
 
         elif self.plot_type == 'markov_plot':
@@ -66,7 +69,7 @@ class PDFDataset(Dataset):
 
 
 def testcase_test_pdfdataset():
-    dataset = PDFDataset()
+    dataset = PDFDataset('byte_plot')
 
     # setup dataloader
     # check pytorch document for the parameter list

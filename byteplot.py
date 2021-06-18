@@ -29,9 +29,9 @@ def convert(directory,name,width):
         return draw_image(int_array,width,name,directory)
     # Else the given width is smaller than the sqrt of the length of the array, so we need to first create the image normally, then compress the newly created image to the desired width
     else:
-        width = find_next_square(int_array.__len__())
-        pad_zeroes(int_array,width)
-        draw_image(int_array,width,name)
+        big_width = find_next_square(int_array.__len__())
+        pad_zeroes(int_array,big_width)
+        draw_image(int_array,big_width,name,directory)
         return compress_image(width,name,directory)
         
 
@@ -57,12 +57,14 @@ def draw_image(int_array,width,name,directory):
 
 # Takes the larger image and scales it down to the given width
 def compress_image(width,name,directory):
-    img = cv2.imread('grayscale.png',cv2.IMREAD_UNCHANGED)
-    dimension = (width,width)
-    img = cv2.resize(img,dimension)
     trimmed_name = name.replace("pdf","png")
     path_name = f"{directory}{trimmed_name}"
-    cv2.imwrite(path_name)
+    # print(path_name)
+    img = cv2.imread(path_name,cv2.IMREAD_UNCHANGED)
+    dimension = (width,width)
+    # print(dimension)
+    img = cv2.resize(img,dimension)
+    cv2.imwrite(path_name,img)
     return(path_name)
     
 
