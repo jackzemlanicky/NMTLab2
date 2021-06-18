@@ -38,14 +38,21 @@ class PDFDataset(Dataset):
         malicious_files = ('Sample\\')
         # Dictionary to store each plot for good and bad pdfs
         data_by_type = {'benign':None,'malicious':None}
-        # only 2 key/value pairs in the dictionary, 'benign' and 'malicious'. Each value will be a list of x and y path names to corresponding grayscale images, respectively
+        path_list_benign = []
+        path_list_malicious = []
+        # only 2 key/value pairs in the dictionary, 'benign' and 'malicious'. Each value will be a list containing x and y path names to corresponding grayscale images
         if self.plot_type == 'byte_plot':
-            # This is where I believe I have to use my program that converts pdf's to grayscale images using the byte plot strategy and load the images into the dictionary
+            # Convert all pdfs to images and save their paths in a list
             for file_name in os.listdir(benign_files):
                 # convert returns the path of the newly created image in a string after converting it, which (should) be added as a value in the dictionary
-                data_by_type['benign'] = bp.convert(benign_files,file_name,256)
-            data_by_type['malicious'] = 1 # put the function call here to convert
-            
+                path_list_benign.append(bp.convert(benign_files,file_name,256))
+            # add this list to the dictionary as benign's value
+            data_by_type['benign'] = path_list_benign
+            # Do the same for the malicious files
+            for file_name in os.listdir(malicious_files):
+                path_list_malicious.append(bp.convert(benign_files,file_name,256))
+            data_by_type['malicious'] = path_list_malicious
+
         elif self.plot_type == 'markov_plot':
             data_by_type['benign'] = 1 # put the function call here to convert
             data_by_type['malicious'] = 1 # put the function call here to convert

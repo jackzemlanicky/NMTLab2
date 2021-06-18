@@ -66,4 +66,4 @@ def compress_image(width,name,directory):
     return(path_name)
     
 
-convert('Sample\\','9-steven-m-rothstein.pdf',256)
+# convert('Sample\\','9-steven-m-rothstein.pdf',256)
