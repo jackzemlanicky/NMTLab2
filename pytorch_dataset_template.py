@@ -1,3 +1,4 @@
+import byteplot as bp
 import torch
 from torch.utils import data
 from torch.utils.data import Dataset, DataLoader
@@ -12,7 +13,6 @@ class PDFDataset(Dataset):
         # We need to know if the incoming pdfs are converted to grayscale images using the byte plot or markov plot
         self.plot_type = plot_type
         self._load()
-        
         # do something to initialize the pdf dataset object
         pass
 
@@ -33,28 +33,29 @@ class PDFDataset(Dataset):
     
     # Get the actual dataset pdfs and load them into a dictionary(good and bad pdfs)
     def _load(self):
-        benign_files = ('Data/CLEAN_PDF_9000_files')
-        malicious_files = ('Data/MALWARE_PDF_PRE_04-2011_10982_files')
+        # In a sample directory with only 10 pdfs for now
+        benign_files = ('Sample\\')
+        malicious_files = ('Sample\\')
         # Dictionary to store each plot for good and bad pdfs
         data_by_type = {'benign':None,'malicious':None}
+        # only 2 key/value pairs in the dictionary, 'benign' and 'malicious'. Each value will be a list of x and y path names to corresponding grayscale images, respectively
         if self.plot_type == 'byte_plot':
             # This is where I believe I have to use my program that converts pdf's to grayscale images using the byte plot strategy and load the images into the dictionary
-            data_by_type['benign'] = 1 # put the function call here to convert
+            for file_name in os.listdir(benign_files):
+                # convert returns the path of the newly created image in a string after converting it, which (should) be added as a value in the dictionary
+                data_by_type['benign'] = bp.convert(benign_files,file_name,256)
             data_by_type['malicious'] = 1 # put the function call here to convert
             
         elif self.plot_type == 'markov_plot':
             data_by_type['benign'] = 1 # put the function call here to convert
             data_by_type['malicious'] = 1 # put the function call here to convert
 
-        # Not sure the point of this label, since we kmow from the above dictionary whether we are getting malicious or benign pdf files
+        # Creates one large list by concatenating 2 smaller lists. Each smaller list has size = total number of values under the corresponding key in the data_by_type dictionary(benign or malicious). The large list (labels) has the same size as the entire dataset, and consists of x entries of "malicious" and y entries of "benign"
         labels = []
         for k in data_by_type.keys():
             n = len(data_by_type[k])
             label = np.repeat(k,n)
             labels.extend(label)
-        # Not exactly sure what index and  "_" are being assigned to, unelss they are both being assigned the self.findclass call
-        index, _ = self._find_class_(labels,one_hot=False)
-        self.labels = index
 
 
 def testcase_test_pdfdataset():
