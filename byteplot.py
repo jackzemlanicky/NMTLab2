@@ -5,6 +5,7 @@ Contributors: Bill Luo
 '''
 import array as arr
 from PIL import Image
+import numpy as np
 from numpy import ceil, sqrt
 import cv2
 import os
@@ -59,13 +60,12 @@ def draw_image(int_array,width,name,directory):
 def compress_image(width,name,directory):
     trimmed_name = name.replace("pdf","png")
     path_name = f"{directory}{trimmed_name}"
-    # print(path_name)
     img = cv2.imread(path_name,cv2.IMREAD_UNCHANGED)
     dimension = (width,width)
-    # print(dimension)
     img = cv2.resize(img,dimension)
     cv2.imwrite(path_name,img)
     return(path_name)
+
     
 
-# convert('Sample\\','9-steven-m-rothstein.pdf',256)
+convert('Sample\\','10esnonresestatsnap.pdf',256)
