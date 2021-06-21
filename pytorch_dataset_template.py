@@ -6,6 +6,9 @@ import os
 import numpy as np
 
 
+path_name_benign = 'Sample\\'
+path_name_malicious = 'Sample\\'
+
 class PDFDataset(Dataset):
     def __init__(self,plot_type):
         # call the __init__() of its parent class
@@ -18,12 +21,14 @@ class PDFDataset(Dataset):
 
     def __len__(self):
         # return the number of instances of the dataset
+        # how to reference of this list like you did in your dataset?
         return len(self.labels)
 
     def __getitem__(self, idx):
         # return X, y
         # X is the byte plot or markov plot
         # y is the corresponding label of X
+        # still confused about this function and tensors in general?
         X, y= 1, 2
         X, y = self._to_tensor(X, y)
         return X, y
@@ -34,8 +39,8 @@ class PDFDataset(Dataset):
     # Get the actual dataset pdfs and load them into a dictionary(good and bad pdfs)
     def _load(self):
         # In a sample directory with only 10 pdfs for now
-        benign_files = ('Sample\\')
-        malicious_files = ('Sample\\')
+        benign_files = (path_name_benign)
+        malicious_files = (path_name_malicious)
         # Dictionary to store each plot for good and bad pdfs
         data_by_type = {'benign':None,'malicious':None}
         path_list_benign = []
@@ -48,7 +53,6 @@ class PDFDataset(Dataset):
                     # convert returns the path of the newly created image in a string after converting it, which (should) be added as a value in the dictionary
                     path_list_benign.append(bp.convert(benign_files,file_name,256))
             # add this list to the dictionary as benign's value
-            print(path_list_benign.__len__())
             data_by_type['benign'] = path_list_benign
             # Do the same for the malicious files
             for file_name in os.listdir(malicious_files):
@@ -66,6 +70,7 @@ class PDFDataset(Dataset):
             n = len(data_by_type[k])
             label = np.repeat(k,n)
             labels.extend(label)
+        
 
 
 def testcase_test_pdfdataset():
